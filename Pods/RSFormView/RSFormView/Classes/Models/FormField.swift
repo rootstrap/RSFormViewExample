@@ -8,11 +8,21 @@
 
 import Foundation
 
+open class ConstraintsConfigurator {
+  public var headerLabelTopMargin: CGFloat = 30
+  public var headerLabelBottomMargin: CGFloat = 12.5
+  
+  public init() {}
+}
+
 open class FormItem {
-  var formFields: [FormField]
+  public let formFields: [FormField]
   
   /// Set with the desired attributed text for text only rows, leave empty for TextFieldView rows
   public var attributedText: NSAttributedString?
+  
+  /// Set with the desired contraints configurations for text only rows, leave empty for TextFieldView rows
+  public var contraintsConfigurator: ConstraintsConfigurator = ConstraintsConfigurator()
   
   /**
    - Parameters:
@@ -78,6 +88,12 @@ open class FormField {
   /// The maximum selectable date for *.date* FormFields
   public var maximumDate: Date?
   
+  /// The minimum character length allowed for the text in a TextFieldView
+  public var minimumTextLength: Int?
+  
+  /// The maximum character length allowed for the text in a TextFieldView
+  public var maximumTextLength: Int?
+  
   /// Source data for *.picker* FormFields
   public var options: [String]?
   
@@ -97,8 +113,10 @@ open class FormField {
       validationType = .fiveDigitZipCode
     case .password:
       validationType = .nonEmpty
-    case .numeric:
-      validationType = .numeric
+    case .integer:
+      validationType = .integer
+    case .double(let maxDecimalPlaces):
+      validationType = .double(maxDecimalPlaces: maxDecimalPlaces)
     case .usState:
       validationType = .usState
     case .picker:

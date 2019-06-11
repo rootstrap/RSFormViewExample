@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public protocol FormViewDelegate: class {
-  func didUpdateFields(allFieldsValid: Bool)
+  func didUpdateFields(in formView: FormView, allFieldsValid: Bool)
 }
 
 @IBDesignable public class FormView: UIView {
@@ -23,6 +23,7 @@ public protocol FormViewDelegate: class {
     didSet {
       backgroundColor = formConfigurator.formBackgroundColor
       formTableView.backgroundColor = formConfigurator.formBackgroundColor
+      formTableView.isScrollEnabled = formConfigurator.isScrollEnabled
       formTableView.reloadData()
     }
   }
@@ -67,10 +68,10 @@ public protocol FormViewDelegate: class {
 
 extension FormView: FormCellDelegate {
   func didUpdate(data: FormField) {
-    update(field: data)
     checkMatches(updatedField: data)
     reloadVisibleCells()
-    delegate?.didUpdateFields(allFieldsValid: viewModel?.validateFields() ?? false)
+    delegate?.didUpdateFields(in: self,
+                              allFieldsValid: viewModel?.validateFields() ?? false)
   }
 }
 
@@ -82,20 +83,22 @@ extension FormView: UITableViewDelegate, UITableViewDataSource {
   
   public func tableView(_ tableView: UITableView,
                  cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let formItem = viewModel?.items[indexPath.row]
-    let rowFields = formItem?.formFields
     
-    if let attributtedText = formItem?.attributedText,
-      rowFields?.isEmpty ?? true,
-      let cell = tableView
-        .dequeueReusableCell(withIdentifier: FormTextCell.reuseIdentifier,
-                             for: indexPath) as? FormTextCell {
-      cell.update(withAttributedText: attributtedText, formConfigurator: formConfigurator)
-      return cell
-    }
+    let rowFields = viewModel?.items[indexPath.row].formFields
+    
+    if let formItem = viewModel?.items[indexPath.row],
+      let _ = formItem.attributedText,
+        rowFields?.isEmpty ?? true,
+        let cell = tableView
+          .dequeueReusableCell(withIdentifier: FormTextCell.reuseIdentifier,
+                               for: indexPath) as? FormTextCell {
+        cell.update(withFormItem: formItem, formConfigurator: formConfigurator)
+        return cell
+      }
     
     return textFieldCell(forRowAt: indexPath,
                          in: tableView,
                          with: rowFields)
   }
+    
 }

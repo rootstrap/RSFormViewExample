@@ -14,11 +14,18 @@ protocol TextFieldDelegate: class {
                  with fieldData: FormField)
 }
 
+@IBDesignable
 class TextFieldView: UIView {
   @IBOutlet weak var textField: UITextField!
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var errorLabel: UILabel!
-  @IBOutlet weak var bottomLine: UIView!
+  @IBOutlet weak var bottomLineView: UIView!
+  @IBOutlet weak var textFieldContainerView: UIView!
+  @IBOutlet weak var titleLabelContainerView: UIView!
+  @IBOutlet weak var labelToTextFieldConstraint: NSLayoutConstraint!
+  @IBOutlet weak var textFieldToBottomLineConstraint: NSLayoutConstraint!
+  @IBOutlet weak var bottomLineToErrorLabelConstraint: NSLayoutConstraint!
+  @IBOutlet weak var textFieldContainerToErrorLabelConstraint: NSLayoutConstraint!
   
   var actualView: UIView?
   
@@ -58,10 +65,10 @@ class TextFieldView: UIView {
     
     let isValid = !fieldData.shouldDisplayError || fieldData.isValid
     
-    bottomLine.backgroundColor = isValid ?
-      bottomLineValidColor() : formConfigurator.invalidLineColor
-    titleLabel.textColor = isValid ?
-      titleValidColor() : formConfigurator.invalidTitleColor
+    configureColors(isValid)
+    
+    textFieldContainerView.layer.cornerRadius = formConfigurator.borderCornerRadius
+    textFieldContainerView.layer.borderWidth = formConfigurator.borderWidth
     
     let errorText = fieldData.oneTimeErrorMessage ?? fieldData.errorMessage
     errorLabel.text = errorText
@@ -72,21 +79,45 @@ class TextFieldView: UIView {
     errorLabel.accessibilityTraits = .staticText
   }
   
+  func configureColors(_ isValid: Bool) {
+    bottomLineView.backgroundColor = isValid ?
+      bottomLineValidColor() : formConfigurator.invalidLineColor
+    titleLabel.textColor = isValid ?
+      titleValidColor() : formConfigurator.invalidTitleColor
+    textFieldContainerView.layer.borderColor = isValid ?
+      borderLineValidColor() : formConfigurator.invalidBorderColor.cgColor
+    errorLabel.textColor = formConfigurator.errorTextColor
+    textField.textColor = formConfigurator.textColor
+  }
+  
   /**
    Updates TextFieldView according to the FormField specifications
    
    - Parameters:
-      - data: Model that describes the behaviour of the TextFieldView instance
-      - formConfigurator: Model that describes the layout of the TextFieldView instance
-  */
+   - data: Model that describes the behaviour of the TextFieldView instance
+   - formConfigurator: Model that describes the layout of the TextFieldView instance
+   */
   func update(withData data: FormField, formConfigurator: FormConfigurator) {
     fieldData = data
-    isAccessibilityElement = false
-    titleLabel.isAccessibilityElement = false
-    textField.accessibilityIdentifier = data.name
-    textField.accessibilityLabel = data.name
     self.formConfigurator = formConfigurator
+    setAccessibility(withData: data)
+    populateTextView(withData: data)
+    setContraints()
+
+    titleLabelContainerView.backgroundColor = formConfigurator.fieldsBackgroundColor
     actualView?.backgroundColor = formConfigurator.fieldsBackgroundColor
+    
+    updateErrorState()
+  }
+  
+  func setContraints() {
+    labelToTextFieldConstraint.constant = formConfigurator.labelToTextFieldDistance
+    textFieldToBottomLineConstraint.constant = formConfigurator.textFieldToBottomLineDistance
+    bottomLineToErrorLabelConstraint.constant = formConfigurator.bottomLineToErrorLabelDistance
+    textFieldContainerToErrorLabelConstraint.constant = formConfigurator.textFieldContainerToErrorLabelDistance
+  }
+  
+  func populateTextView(withData data: FormField) {
     updatePlaceHolder(withText: data.placeholder)
     textField.clearButtonMode = (data.fieldType == .date || data.fieldType == .picker) ? .never : .whileEditing
     textField.isSecureTextEntry = data.fieldType == .password
@@ -94,11 +125,21 @@ class TextFieldView: UIView {
     titleLabel.text = data.name
     errorLabel.text = data.errorMessage
     titleLabel.isHidden = data.value.isEmpty
+    titleLabelContainerView.isHidden = data.value.isEmpty
     if !data.value.isEmpty && data.oneTimeErrorMessage == nil {
       data.shouldDisplayError = true
       validate(with: data.value)
     }
-    updateErrorState()
+  }
+  
+  func setAccessibility(withData data: FormField) {
+    isAccessibilityElement = false
+    titleLabel.isAccessibilityElement = false
+    titleLabelContainerView.isAccessibilityElement = false
+    titleLabelContainerView.backgroundColor = formConfigurator.fieldsBackgroundColor
+    textFieldContainerView.isAccessibilityElement = false
+    textField.accessibilityIdentifier = data.name
+    textField.accessibilityLabel = data.name
   }
   
   func updatePlaceHolder(withText text: String) {
@@ -118,13 +159,14 @@ class TextFieldView: UIView {
   func validate(with text: String) {
     guard let data = fieldData else { return }
     data.isValid = data.value.isValid(type: data.validationType ?? data.defaultValidationType)
+      && data.value.isValidLength(maxLength: data.maximumTextLength, minLength: data.minimumTextLength)
   }
 }
 
 //Date picker related methods
 extension TextFieldView {
   @objc func datePickerChangedValue(sender: UIDatePicker) {
-    guard let data = fieldData else { return }
+    guard let _ = fieldData else { return }
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = TextFieldView.dateFormat
     
@@ -138,17 +180,17 @@ extension TextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
   func numberOfComponents(in pickerView: UIPickerView) -> Int {
     return 1
   }
-
+  
   func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
     guard let fieldOptions = fieldData?.options else { return 0 }
     return fieldOptions.count
   }
-
+  
   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
     guard let fieldOptions = fieldData?.options else { return "" }
     return fieldOptions[row]
   }
-
+  
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     guard let fieldData = fieldData,
       let fieldOptions = fieldData.options else { return }
@@ -190,14 +232,18 @@ extension TextFieldView: UITextFieldDelegate {
   
   func textFieldDidBeginEditing(_ textField: UITextField) {
     titleLabel.textColor = formConfigurator.editingTitleColor
-    bottomLine.backgroundColor = formConfigurator.editingLineColor
+    bottomLineView.backgroundColor = formConfigurator.editingLineColor
     textField.placeholder = ""
     titleLabel.isHidden = false
+    titleLabelContainerView.isHidden = false
+    textFieldContainerView.layer.borderColor = formConfigurator.editingBorderColor.cgColor
   }
   
   func textFieldDidEndEditing(_ textField: UITextField) {
     titleLabel.isHidden = fieldData?.value ?? "" == ""
+    titleLabelContainerView.isHidden = fieldData?.value ?? "" == ""
     updatePlaceHolder(withText: fieldData?.placeholder ?? "")
     updateErrorState()
   }
 }
+

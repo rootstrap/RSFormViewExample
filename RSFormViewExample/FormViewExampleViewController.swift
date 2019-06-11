@@ -79,8 +79,9 @@ class FormViewExampleViewController: UIViewController {
   
   func configureSwitch() {
     modeSwitch.isOn = false
-    modeSwitch.onTintColor = UIColor.astralBlue
+    modeSwitch.onTintColor = UIColor.dodgerBlue
     modeSwitch.translatesAutoresizingMaskIntoConstraints = false
+    modeSwitch.addTarget(self, action: #selector(switchValueChanged), for: .valueChanged)
     
     view.addSubview(modeSwitch)
   }
@@ -117,7 +118,7 @@ class FormViewExampleViewController: UIViewController {
   
   func updateSubmitButton(enabled: Bool) {
     let backgroundColor = enabled ?
-      UIColor.astralBlue : UIColor.brightGray.withAlphaComponent(0.4)
+      UIColor.dodgerBlue : UIColor.brightGray.withAlphaComponent(0.4)
     submitButton.backgroundColor = backgroundColor
     submitButton.isUserInteractionEnabled = enabled
   }
@@ -125,7 +126,13 @@ class FormViewExampleViewController: UIViewController {
   //MASK: Actions
   @objc
   func switchValueChanged(sender: UISwitch) {
-    //TODO change form configurator and layout on the rest of the views to match dark mode
+    let isDarkMode = sender.isOn
+    let configurator = isDarkMode ? DarkModeConfigurator() : FormConfigurator()
+    formHelper.updateHeaders(isDarkMode: isDarkMode)
+    formView.formConfigurator = configurator
+    view.backgroundColor = isDarkMode ? UIColor.mineShaftGray : UIColor.white
+    descriptionLabel.textColor = isDarkMode ? UIColor.white : UIColor.brightGray
+    switchLabel.textColor = isDarkMode ? UIColor.white : UIColor.brightGray
   }
   
   @objc
@@ -144,7 +151,7 @@ class FormViewExampleViewController: UIViewController {
 }
 
 extension FormViewExampleViewController: FormViewDelegate {
-  func didUpdateFields(allFieldsValid: Bool) {
+  func didUpdateFields(in formView: FormView, allFieldsValid: Bool) {
     updateSubmitButton(enabled: allFieldsValid)
   }
 }
