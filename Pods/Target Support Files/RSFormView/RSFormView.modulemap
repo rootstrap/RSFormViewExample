@@ -1,0 +1,6 @@
+framework module RSFormView {
+  umbrella header "RSFormView-umbrella.h"
+
+  export *
+  module * { export * }
+}

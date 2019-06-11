@@ -7,21 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0731330322AEDF580078ADF5 /* ExampleFormHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0731330222AEDF580078ADF5 /* ExampleFormHelper.swift */; };
 		07D4596122AED6B40003A198 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D4596022AED6B40003A198 /* AppDelegate.swift */; };
-		07D4596322AED6B40003A198 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D4596222AED6B40003A198 /* ViewController.swift */; };
-		07D4596622AED6B40003A198 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07D4596422AED6B40003A198 /* Main.storyboard */; };
+		07D4596322AED6B40003A198 /* FormViewExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D4596222AED6B40003A198 /* FormViewExampleViewController.swift */; };
 		07D4596822AED6B50003A198 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07D4596722AED6B50003A198 /* Assets.xcassets */; };
 		07D4596B22AED6B50003A198 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07D4596922AED6B50003A198 /* LaunchScreen.storyboard */; };
+		8F0A95423D6720613A86C1FA /* Pods_RSFormViewExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF2F3BB38D69A0618790B6BD /* Pods_RSFormViewExample.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0731330222AEDF580078ADF5 /* ExampleFormHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleFormHelper.swift; sourceTree = "<group>"; };
 		07D4595D22AED6B40003A198 /* RSFormViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RSFormViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07D4596022AED6B40003A198 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		07D4596222AED6B40003A198 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		07D4596522AED6B40003A198 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		07D4596222AED6B40003A198 /* FormViewExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewExampleViewController.swift; sourceTree = "<group>"; };
 		07D4596722AED6B50003A198 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		07D4596A22AED6B50003A198 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		07D4596C22AED6B50003A198 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5EC508A6626DBB5F3EF7727F /* Pods-RSFormViewExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSFormViewExample.debug.xcconfig"; path = "Target Support Files/Pods-RSFormViewExample/Pods-RSFormViewExample.debug.xcconfig"; sourceTree = "<group>"; };
+		E4BF3B5BF539AD03B093F58B /* Pods-RSFormViewExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RSFormViewExample.release.xcconfig"; path = "Target Support Files/Pods-RSFormViewExample/Pods-RSFormViewExample.release.xcconfig"; sourceTree = "<group>"; };
+		EF2F3BB38D69A0618790B6BD /* Pods_RSFormViewExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RSFormViewExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F0A95423D6720613A86C1FA /* Pods_RSFormViewExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +45,8 @@
 			children = (
 				07D4595F22AED6B40003A198 /* RSFormViewExample */,
 				07D4595E22AED6B40003A198 /* Products */,
+				DFE3AFDFB601C120C204EDF5 /* Pods */,
+				43BAC04B2829D8A951D8CF82 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -55,13 +62,30 @@
 			isa = PBXGroup;
 			children = (
 				07D4596022AED6B40003A198 /* AppDelegate.swift */,
-				07D4596222AED6B40003A198 /* ViewController.swift */,
-				07D4596422AED6B40003A198 /* Main.storyboard */,
+				07D4596222AED6B40003A198 /* FormViewExampleViewController.swift */,
 				07D4596722AED6B50003A198 /* Assets.xcassets */,
 				07D4596922AED6B50003A198 /* LaunchScreen.storyboard */,
 				07D4596C22AED6B50003A198 /* Info.plist */,
+				0731330222AEDF580078ADF5 /* ExampleFormHelper.swift */,
 			);
 			path = RSFormViewExample;
+			sourceTree = "<group>";
+		};
+		43BAC04B2829D8A951D8CF82 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EF2F3BB38D69A0618790B6BD /* Pods_RSFormViewExample.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DFE3AFDFB601C120C204EDF5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5EC508A6626DBB5F3EF7727F /* Pods-RSFormViewExample.debug.xcconfig */,
+				E4BF3B5BF539AD03B093F58B /* Pods-RSFormViewExample.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -71,9 +95,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 07D4596F22AED6B50003A198 /* Build configuration list for PBXNativeTarget "RSFormViewExample" */;
 			buildPhases = (
+				7516642C7AB69F159CC83D2F /* [CP] Check Pods Manifest.lock */,
 				07D4595922AED6B40003A198 /* Sources */,
 				07D4595A22AED6B40003A198 /* Frameworks */,
 				07D4595B22AED6B40003A198 /* Resources */,
+				AD5C61FF244C4B8FB84C4C71 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -124,33 +150,74 @@
 			files = (
 				07D4596B22AED6B50003A198 /* LaunchScreen.storyboard in Resources */,
 				07D4596822AED6B50003A198 /* Assets.xcassets in Resources */,
-				07D4596622AED6B40003A198 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7516642C7AB69F159CC83D2F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RSFormViewExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AD5C61FF244C4B8FB84C4C71 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RSFormViewExample/Pods-RSFormViewExample-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/RSFormView/RSFormView.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RSFormView.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RSFormViewExample/Pods-RSFormViewExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		07D4595922AED6B40003A198 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07D4596322AED6B40003A198 /* ViewController.swift in Sources */,
+				07D4596322AED6B40003A198 /* FormViewExampleViewController.swift in Sources */,
 				07D4596122AED6B40003A198 /* AppDelegate.swift in Sources */,
+				0731330322AEDF580078ADF5 /* ExampleFormHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		07D4596422AED6B40003A198 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				07D4596522AED6B40003A198 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		07D4596922AED6B50003A198 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -280,6 +347,7 @@
 		};
 		07D4597022AED6B50003A198 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5EC508A6626DBB5F3EF7727F /* Pods-RSFormViewExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -298,6 +366,7 @@
 		};
 		07D4597122AED6B50003A198 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4BF3B5BF539AD03B093F58B /* Pods-RSFormViewExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
