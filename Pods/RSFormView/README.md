@@ -10,7 +10,7 @@
 
 RSFormView is a library that helps you build fully customizable forms for data entry in a few minutes. 
 
-![](formExample.gif)
+<img src="https://github.com/rootstrap/RSFormView/blob/master/formExample.gif" height="440">
 
 ## Installation
 
@@ -59,7 +59,7 @@ More about fields configuration in the `FormItem` section.
 5. Configure your form looks
 
 
-Create a `FormConfigurator` change any colors or fonts you need and set it to your form view
+Create a `FormConfigurator` change any colors or fonts you need and set it to your form view.
 ```swift
 let configurator = FormConfigurator()
 configurator.textColor = UIColor.lightGray
@@ -68,6 +68,53 @@ configurator.titleFont = UIFont.systemFont(withSize: 13)
 ...
 formView.formConfigurator = configurator
 ```
+
+Use the UIColor extension `formColor(red: Int, green: Int, blue: Int)`  to create new UIColors.
+```swift
+let configurator = FormConfigurator()
+...
+let darkPurple = UIColor.formColor(red: 140, green: 20, blue: 252)
+configurator.editingTitleColor = darkPurple
+...
+formView.formConfigurator = configurator
+```
+
+Choose whether to hide the bottom line by setting the bottom line colors to clear (they are set colored by default)
+```swift
+let configurator = FormConfigurator()
+...
+configurator.validLineColor = UIColor.clear
+configurator.invalidLineColor = UIColor.clear
+configurator.editingLineColor = UIColor.clear
+...
+formView.formConfigurator = configurator
+```
+
+Choose whether to show borders by setting the border colors to the value desired (they are set clear by default). 
+Also set the border width and corner radius as desired.
+```swift
+let configurator = FormConfigurator()
+...
+configurator.validBorderColor = UIColor.gray
+configurator.invalidBorderColor = UIColor.orange
+configurator.editingBorderColor = UIColor.darkPurple
+configurator.borderCornerRadius = 20
+configurator.borderWidth = 2
+...
+formView.formConfigurator = configurator
+```
+
+<img src="https://github.com/rootstrap/RSFormView/blob/master/editBorders.gif" height="440">
+
+Disable tableView scrolling, which is enabled by default.
+```swift
+let configurator = FormConfigurator()
+...
+configurator.isScrollEnabled = false
+...
+formView.formConfigurator = configurator
+```
+
 6. Collect data
 
 
@@ -94,7 +141,8 @@ formViewModel.fields().forEach {
 Cases: 
  - email: Will present the email keyboard when the field is selected and validate that the text entry is in an email format
  - date: Will present a native date picker when the field is selected and validate that the entry is not empty
- - numeric: Will present the numeric keyboard when the field is selected and validate that the text entry can be casted to Int
+ - integer: Will present the numeric keyboard when the field is selected and validate that the text entry can be casted to Int
+ - double: Will present the decimal keyboard when the field is selected and validate that the text entry can be casted to Double, max 2 decimal places
  - password: Will mask the text entry in UI and validate that the text entry is not empty
  - usPhone: Will decorate the text entry with slashes (111-111-1111) and validate that the text entry is in a valid US phone number format  
  
@@ -108,7 +156,8 @@ Cases:
  Cases: 
  - nonEmpty: Will mark the field invalid if the text entry is empty
  - none: No validation will be made, the field will never be marked invalid unless manually made so
- - numeric: Will mark the field invalid if the text entry is not a number
+ - integer: Will mark the field invalid if the text entry is not an integer
+ - double: Will mark the field invalid if the text entry is not a double, max 2 decimal places
  - usState: Will validate that the text entry matches the name or abbreviation of any of the US states
  - custom: Pass this case a block with your custom validation.
 

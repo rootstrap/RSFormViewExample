@@ -55,17 +55,13 @@ class ExampleFormHelper: FormViewModel {
   
   lazy var personalInfoHeaderItem: FormItem = {
     let headerItem = FormItem()
-    headerItem.attributedText = NSAttributedString(string: "Enter your personal info",
-                                                   attributes: [.foregroundColor: UIColor.brightGray,
-                                                                .font: UIFont.systemFont(ofSize: 20)])
+    headerItem.attributedText = personalInfoAttributedString(isDarkMode: false)
     return headerItem
   }()
   
   lazy var otherInfoHeaderItem: FormItem = {
     let headerItem = FormItem()
-    headerItem.attributedText = NSAttributedString(string: "Enter other relevant info",
-                                                   attributes: [.foregroundColor: UIColor.brightGray,
-                                                                .font: UIFont.systemFont(ofSize: 20)])
+    headerItem.attributedText = otherInfoAttributedString(isDarkMode: false)
     return headerItem
   }()
   
@@ -85,7 +81,7 @@ class ExampleFormHelper: FormViewModel {
     let distanceField = FormField(name: "BED TO DESK DISTANCE (m)",
                                   initialValue: "",
                                   placeholder: "BED TO DESK DISTANCE",
-                                  fieldType: .numeric,
+                                  fieldType: .double(maxDecimalPlaces: 2),
                                   isValid: false,
                                   errorMessage: "Bed to desk distance can't be blank")
     
@@ -99,5 +95,25 @@ class ExampleFormHelper: FormViewModel {
   func loadItems() {
     items = [personalInfoHeaderItem, nameItem, emailItem,
              phoneNumberItem, otherInfoHeaderItem, programmingLanguageItem, bedToDeskDistance]
+  }
+  
+  func updateHeaders(isDarkMode: Bool) {
+    otherInfoHeaderItem.attributedText = otherInfoAttributedString(isDarkMode: isDarkMode)
+    personalInfoHeaderItem.attributedText = personalInfoAttributedString(isDarkMode: isDarkMode)
+  }
+  
+  func otherInfoAttributedString(isDarkMode: Bool) -> NSAttributedString {
+    return NSAttributedString(string: "Enter other relevant info",
+                              attributes: attributes(isDarkMode: isDarkMode))
+  }
+  
+  func personalInfoAttributedString(isDarkMode: Bool) -> NSAttributedString {
+    return NSAttributedString(string: "Enter your personal info",
+                              attributes: attributes(isDarkMode: isDarkMode))
+  }
+  
+  func attributes(isDarkMode: Bool) -> [NSAttributedString.Key: Any]{
+    return [.foregroundColor: isDarkMode ? UIColor.white : UIColor.brightGray,
+            .font: UIFont.systemFont(ofSize: 20)]
   }
 }
