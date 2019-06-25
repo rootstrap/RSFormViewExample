@@ -8,14 +8,15 @@
 
 import Foundation
 import UIKit
+import CoreGraphics
 
-protocol TextFieldDelegate: class {
+public protocol TextFieldDelegate: class {
   func didUpdate(textFieldView: TextFieldView,
                  with fieldData: FormField)
 }
 
 @IBDesignable
-class TextFieldView: UIView {
+public class TextFieldView: UIView {
   @IBOutlet weak var textField: UITextField!
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var errorLabel: UILabel!
@@ -40,6 +41,16 @@ class TextFieldView: UIView {
       setKeyboardType()
     }
   }
+
+  var isValid: Bool {
+    return fieldData?.isValid ?? false
+  }
+
+  var borderColor: UIColor? {
+    didSet {
+      setNeedsDisplay()
+    }
+  }
   
   var formConfigurator = FormConfigurator()
   
@@ -51,6 +62,41 @@ class TextFieldView: UIView {
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
     configureViews()
+  }
+
+  override public func draw(_ rect: CGRect) {
+    super.draw(rect)
+    guard let context = UIGraphicsGetCurrentContext() else { return }
+    context.resetClip()
+
+    let shouldClip = !(fieldData?.value.isEmpty ?? true) || textField.placeholder?.isEmpty ?? true
+    let currentBorderColor = borderColor ?? formConfigurator.validBorderColor
+    let rectPath = UIBezierPath(roundedRect: textFieldContainerView.frame,
+                                cornerRadius: formConfigurator.borderCornerRadius)
+    rectPath.lineWidth = formConfigurator.borderWidth
+
+    if shouldClip {
+      let clipPath = UIBezierPath(roundedRect: .infinite,
+                                  cornerRadius: formConfigurator.borderCornerRadius)
+      let titleLabelPath = UIBezierPath(rect: titleLabelContainerView.frame)
+      clipPath.append(titleLabelPath)
+      clipPath.usesEvenOddFillRule = true
+      /* Clipping paths are used to define in which areas
+        the drawing context will actually draw, in this case
+        If the titleView is present, we need to create a shape
+        that excludes that area, so when we store the border
+        that part is not drawn.
+        https://developer.apple.com/documentation/uikit/uibezierpath/1624341-addclip
+      */
+      clipPath.addClip()
+    }
+
+    currentBorderColor.setStroke()
+    rectPath.stroke()
+    // Removed the clipping path, so when we paint the background, it fills the whole shape
+    context.resetClip()
+    formConfigurator.fieldsBackgroundColor.setFill()
+    rectPath.fill()
   }
   
   /// Updates TextFieldView layout according of the validation state of the related FormField
@@ -67,9 +113,6 @@ class TextFieldView: UIView {
     
     configureColors(isValid)
     
-    textFieldContainerView.layer.cornerRadius = formConfigurator.borderCornerRadius
-    textFieldContainerView.layer.borderWidth = formConfigurator.borderWidth
-    
     let errorText = fieldData.oneTimeErrorMessage ?? fieldData.errorMessage
     errorLabel.text = errorText
     
@@ -80,14 +123,20 @@ class TextFieldView: UIView {
   }
   
   func configureColors(_ isValid: Bool) {
-    bottomLineView.backgroundColor = isValid ?
-      bottomLineValidColor() : formConfigurator.invalidLineColor
+    backgroundColor = formConfigurator.cellsBackgroundColor
     titleLabel.textColor = isValid ?
       titleValidColor() : formConfigurator.invalidTitleColor
-    textFieldContainerView.layer.borderColor = isValid ?
-      borderLineValidColor() : formConfigurator.invalidBorderColor.cgColor
     errorLabel.textColor = formConfigurator.errorTextColor
     textField.textColor = formConfigurator.textColor
+    var activeColor = isValid ?
+      borderLineValidColor() : formConfigurator.invalidBorderColor
+    borderColor = activeColor
+    if borderColor == .clear {
+      activeColor = isValid ?
+        bottomLineValidColor() : formConfigurator.invalidLineColor
+      bottomLineView.backgroundColor = activeColor
+    }
+    textField.tintColor = activeColor
   }
   
   /**
@@ -104,9 +153,6 @@ class TextFieldView: UIView {
     populateTextView(withData: data)
     setContraints()
 
-    titleLabelContainerView.backgroundColor = formConfigurator.fieldsBackgroundColor
-    actualView?.backgroundColor = formConfigurator.fieldsBackgroundColor
-    
     updateErrorState()
   }
   
@@ -136,7 +182,6 @@ class TextFieldView: UIView {
     isAccessibilityElement = false
     titleLabel.isAccessibilityElement = false
     titleLabelContainerView.isAccessibilityElement = false
-    titleLabelContainerView.backgroundColor = formConfigurator.fieldsBackgroundColor
     textFieldContainerView.isAccessibilityElement = false
     textField.accessibilityIdentifier = data.name
     textField.accessibilityLabel = data.name
@@ -177,21 +222,21 @@ extension TextFieldView {
 
 //General picker related methods
 extension TextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
-  func numberOfComponents(in pickerView: UIPickerView) -> Int {
+  public func numberOfComponents(in pickerView: UIPickerView) -> Int {
     return 1
   }
   
-  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+  public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
     guard let fieldOptions = fieldData?.options else { return 0 }
     return fieldOptions.count
   }
   
-  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+  public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
     guard let fieldOptions = fieldData?.options else { return "" }
     return fieldOptions[row]
   }
   
-  func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+  public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     guard let fieldData = fieldData,
       let fieldOptions = fieldData.options else { return }
     let pickerString = fieldOptions[row]
@@ -200,7 +245,7 @@ extension TextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
 }
 
 extension TextFieldView: UITextFieldDelegate {
-  func textField(_ textField: UITextField,
+  public func textField(_ textField: UITextField,
                  shouldChangeCharactersIn range: NSRange,
                  replacementString string: String) -> Bool {
     guard let data = fieldData,
@@ -221,7 +266,7 @@ extension TextFieldView: UITextFieldDelegate {
     return false
   }
   
-  func textFieldShouldClear(_ textField: UITextField) -> Bool {
+  public func textFieldShouldClear(_ textField: UITextField) -> Bool {
     guard let data = fieldData else { return true }
     data.value = ""
     data.shouldDisplayError = true
@@ -230,20 +275,36 @@ extension TextFieldView: UITextFieldDelegate {
     return true
   }
   
-  func textFieldDidBeginEditing(_ textField: UITextField) {
+  public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+    if let data = fieldData,
+        let options = data.options,
+        data.fieldType == .picker,
+        textField.text?.isEmpty ?? true {
+        update(withPickerText: options[0])
+    }
+    return true
+  }
+  
+  public func textFieldDidBeginEditing(_ textField: UITextField) {
     titleLabel.textColor = formConfigurator.editingTitleColor
-    bottomLineView.backgroundColor = formConfigurator.editingLineColor
     textField.placeholder = ""
     titleLabel.isHidden = false
     titleLabelContainerView.isHidden = false
-    textFieldContainerView.layer.borderColor = formConfigurator.editingBorderColor.cgColor
+    borderColor = formConfigurator.editingBorderColor
+    textField.tintColor = formConfigurator.editingBorderColor
+    if borderColor == .clear {
+      bottomLineView.backgroundColor = formConfigurator.editingLineColor
+      textField.tintColor = formConfigurator.editingLineColor
+    }
+    setNeedsDisplay()
   }
   
-  func textFieldDidEndEditing(_ textField: UITextField) {
+  public func textFieldDidEndEditing(_ textField: UITextField) {
     titleLabel.isHidden = fieldData?.value ?? "" == ""
     titleLabelContainerView.isHidden = fieldData?.value ?? "" == ""
     updatePlaceHolder(withText: fieldData?.placeholder ?? "")
     updateErrorState()
+    setNeedsDisplay()
   }
 }
 
