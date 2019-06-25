@@ -27,7 +27,7 @@ class ExampleFormHelper: FormViewModel {
                                   isValid: false,
                                   errorMessage: "Last name can't be empty")
     
-    return FormItem(firstField: firstNameField, secondField: lastNameField)
+    return TwoTextFieldCellItem(firstField: firstNameField, secondField: lastNameField)
   }()
   
   lazy var emailItem: FormItem = {
@@ -39,7 +39,7 @@ class ExampleFormHelper: FormViewModel {
                                errorMessage: "Please enter a valid email")
     emailField.capitalizeValue = false
     
-    return FormItem(firstField: emailField)
+    return TextFieldCellItem(with: emailField)
   }()
   
   lazy var phoneNumberItem: FormItem = {
@@ -50,17 +50,17 @@ class ExampleFormHelper: FormViewModel {
                                isValid: false,
                                errorMessage: "Please enter a valid US phone number")
     
-    return FormItem(firstField: phoneField)
+    return TextFieldCellItem(with: phoneField)
   }()
   
   lazy var personalInfoHeaderItem: FormItem = {
-    let headerItem = FormItem()
+    let headerItem = TextCellItem()
     headerItem.attributedText = personalInfoAttributedString(isDarkMode: false)
     return headerItem
   }()
   
   lazy var otherInfoHeaderItem: FormItem = {
-    let headerItem = FormItem()
+    let headerItem = TextCellItem()
     headerItem.attributedText = otherInfoAttributedString(isDarkMode: false)
     return headerItem
   }()
@@ -74,7 +74,7 @@ class ExampleFormHelper: FormViewModel {
                                   errorMessage: "Favorite language can't be empty")
     languageField.options = ["Swift", "Objective-C", "I don't code native iOS (booo)"]
     
-    return FormItem(firstField: languageField)
+    return TextFieldCellItem(with: languageField)
   }()
   
   lazy var bedToDeskDistance: FormItem = {
@@ -85,7 +85,7 @@ class ExampleFormHelper: FormViewModel {
                                   isValid: false,
                                   errorMessage: "Bed to desk distance can't be blank")
     
-    return FormItem(firstField: distanceField)
+    return TextFieldCellItem(with: distanceField)
   }()
   
   init() {

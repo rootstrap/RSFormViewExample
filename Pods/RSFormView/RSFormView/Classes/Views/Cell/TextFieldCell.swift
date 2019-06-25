@@ -9,44 +9,36 @@
 import Foundation
 import UIKit
 
-protocol FormCellDelegate: class {
-  func didUpdate(data: FormField)
-}
+public class TextFieldCell: FormTableViewCell {
+  
+  public static let reuseIdentifier = "TextFieldCellIdentifier"
+  
+  @IBOutlet public weak var textFieldView: TextFieldView!
 
-protocol FormViewCell: class {
-  func updateErrorState()
-}
-
-class TextFieldCell: UITableViewCell, FormViewCell {
-  
-  static let reuseIdentifier = "TextFieldCellIdentifier"
-  
-  @IBOutlet weak var textFieldView: TextFieldView!
-  
-  weak var delegate: FormCellDelegate?
-  
-  override func awakeFromNib() {
+  override public  func awakeFromNib() {
     textFieldView.delegate = self
   }
   
-  func update(withData data: FormField, formConfigurator: FormConfigurator) {
-    contentView.backgroundColor = formConfigurator.fieldsBackgroundColor
-    backgroundColor = formConfigurator.fieldsBackgroundColor
+  override public func update(with formItem: FormItem, and formConfigurator: FormConfigurator) {
     isAccessibilityElement = false
-    textFieldView.update(withData: data, formConfigurator: formConfigurator)
+    self.formItem = formItem
+    guard let fieldData = formItem.formFields.first else { return }
+    
+    contentView.backgroundColor = formConfigurator.cellsBackgroundColor
+    textFieldView.update(withData: fieldData, formConfigurator: formConfigurator)
   }
   
-  func updateErrorState() {
+  override public func updateErrorState() {
     textFieldView.updateErrorState()
   }
   
-  func focus() {
+  public func focus() {
     textFieldView.textField.becomeFirstResponder()
   }
 }
 
 extension TextFieldCell: TextFieldDelegate {
-  func didUpdate(textFieldView: TextFieldView, with fieldData: FormField) {
+  public func didUpdate(textFieldView: TextFieldView, with fieldData: FormField) {
     textFieldView.textField.text = fieldData.value
     delegate?.didUpdate(data: fieldData)
   }

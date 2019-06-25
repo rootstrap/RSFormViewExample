@@ -9,30 +9,28 @@
 import Foundation
 import UIKit
 
-class TwoTextFieldsCell: UITableViewCell, FormViewCell {
+public class TwoTextFieldsCell: FormTableViewCell {
   
-  static let reuseIdentifier = "TwoTextFieldsCellIdentifier"
+  public static let reuseIdentifier = "TwoTextFieldsCellIdentifier"
   
-  @IBOutlet weak var firstTextField: TextFieldView!
-  @IBOutlet weak var secondTextField: TextFieldView!
+  @IBOutlet public weak var firstTextField: TextFieldView!
+  @IBOutlet public weak var secondTextField: TextFieldView!
   
-  weak var delegate: FormCellDelegate?
-  
-  override func awakeFromNib() {
+  override public func awakeFromNib() {
     firstTextField.delegate = self
     secondTextField.delegate = self
   }
   
-  func update(withFormItem formItem: FormItem, formConfigurator: FormConfigurator) {
+  override public func update(with formItem: FormItem, and formConfigurator: FormConfigurator) {
     guard formItem.formFields.count == 2 else { return }
+    self.formItem = formItem
     
     let firstFieldData = formItem.formFields[0]
     let secondFieldData = formItem.formFields[1]
   
     isAccessibilityElement = false
-    contentView.backgroundColor = formConfigurator.fieldsBackgroundColor
-    backgroundColor = formConfigurator.fieldsBackgroundColor
-    
+
+    contentView.backgroundColor = formConfigurator.cellsBackgroundColor
     update(textFieldView: firstTextField,
            withData: firstFieldData,
            formConfigurator: formConfigurator)
@@ -41,18 +39,18 @@ class TwoTextFieldsCell: UITableViewCell, FormViewCell {
            formConfigurator: formConfigurator)
   }
   
-  func update(textFieldView: TextFieldView, withData data: FormField, formConfigurator: FormConfigurator) {
+  public func update(textFieldView: TextFieldView, withData data: FormField, formConfigurator: FormConfigurator) {
     textFieldView.update(withData: data, formConfigurator: formConfigurator)
   }
   
-  func updateErrorState() {
+  override public func updateErrorState() {
     firstTextField.updateErrorState()
     secondTextField.updateErrorState()
   }
 }
 
 extension TwoTextFieldsCell: TextFieldDelegate {
-  func didUpdate(textFieldView: TextFieldView, with fieldData: FormField) {
+  public func didUpdate(textFieldView: TextFieldView, with fieldData: FormField) {
     textFieldView.textField.text = fieldData.value
     delegate?.didUpdate(data: fieldData)
   }

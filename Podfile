@@ -3,6 +3,6 @@
 target 'RSFormViewExample' do
   use_frameworks!
 
-  pod 'RSFormView', '~> 1.1.0'
+  pod 'RSFormView', '~> 2.0.0'
 
 end

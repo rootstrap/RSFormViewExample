@@ -18,7 +18,14 @@ public protocol FormViewDelegate: class {
   @IBOutlet weak var formTableView: UITableView!
   
   public weak var delegate: FormViewDelegate?
-  public var viewModel: FormViewModel?
+
+  public var viewModel: FormViewModel? {
+    didSet {
+      viewModel?.customCellSetup?(formTableView)
+      reloadVisibleCells()
+    }
+  }
+
   public var formConfigurator = FormConfigurator() {
     didSet {
       backgroundColor = formConfigurator.formBackgroundColor
@@ -44,10 +51,15 @@ public protocol FormViewDelegate: class {
     configureViews()
   }
   
+  public override func prepareForInterfaceBuilder() {
+    super.prepareForInterfaceBuilder()
+    configureViews()
+  }
+  
   /// Updates the error state for every visible FormItems
   public func reloadVisibleCells() {
     for cell in formTableView.visibleCells {
-      if let cell = cell as? FormViewCell {
+      if let cell = cell as? FormTableViewCell {
         cell.updateErrorState()
       }
     }
@@ -67,7 +79,7 @@ public protocol FormViewDelegate: class {
 }
 
 extension FormView: FormCellDelegate {
-  func didUpdate(data: FormField) {
+  public func didUpdate(data: FormField) {
     checkMatches(updatedField: data)
     reloadVisibleCells()
     delegate?.didUpdateFields(in: self,
@@ -83,22 +95,22 @@ extension FormView: UITableViewDelegate, UITableViewDataSource {
   
   public func tableView(_ tableView: UITableView,
                  cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    
-    let rowFields = viewModel?.items[indexPath.row].formFields
-    
-    if let formItem = viewModel?.items[indexPath.row],
-      let _ = formItem.attributedText,
-        rowFields?.isEmpty ?? true,
-        let cell = tableView
-          .dequeueReusableCell(withIdentifier: FormTextCell.reuseIdentifier,
-                               for: indexPath) as? FormTextCell {
-        cell.update(withFormItem: formItem, formConfigurator: formConfigurator)
-        return cell
-      }
-    
-    return textFieldCell(forRowAt: indexPath,
-                         in: tableView,
-                         with: rowFields)
+    let formItem = viewModel?.items[indexPath.row]
+
+    let reuseId = formItem?.cellIdentifier ?? FormTextCell.reuseIdentifier
+
+    let cell = tableView.dequeueReusableCell(withIdentifier: reuseId,
+                                             for: indexPath)
+
+    guard
+      let formCell = cell as? FormTableViewCell,
+      let item = formItem
+    else {
+      return cell
+    }
+
+    formCell.delegate = self
+    formCell.update(with: item, and: formConfigurator)
+    return formCell
   }
-    
 }

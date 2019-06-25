@@ -9,18 +9,19 @@
 import Foundation
 import UIKit
 
-class FormTextCell: UITableViewCell {
+public class FormTextCell: FormTableViewCell {
   
-  static let reuseIdentifier = "FormTextCellIdentifier"
-  @IBOutlet weak var formTextLabel: UILabel!
-  @IBOutlet weak var headerLabelTopMarginConstraint: NSLayoutConstraint!
-  @IBOutlet weak var headerLabelBottomMarginConstraint: NSLayoutConstraint!
+  public static let reuseIdentifier = "FormTextCellIdentifier"
+  @IBOutlet public weak var formTextLabel: UILabel!
+  @IBOutlet public weak var headerLabelTopMarginConstraint: NSLayoutConstraint!
+  @IBOutlet public weak var headerLabelBottomMarginConstraint: NSLayoutConstraint!
   
-  func update(withFormItem formItem: FormItem, formConfigurator: FormConfigurator) {
+  override public func update(with formItem: FormItem, and formConfigurator: FormConfigurator) {
+    self.formItem = formItem
+    
+    contentView.backgroundColor = formConfigurator.cellsBackgroundColor
     headerLabelTopMarginConstraint.constant = formItem.contraintsConfigurator.headerLabelTopMargin
     headerLabelBottomMarginConstraint.constant = formItem.contraintsConfigurator.headerLabelBottomMargin
-    contentView.backgroundColor = formConfigurator.fieldsBackgroundColor
-    backgroundColor = formConfigurator.fieldsBackgroundColor
     formTextLabel.attributedText = formItem.attributedText
   }
 }

@@ -1,10 +1,10 @@
 PODS:
   - IQKeyboardManagerSwift (6.1.1)
-  - RSFormView (1.1.0):
+  - RSFormView (2.0.1):
     - IQKeyboardManagerSwift (~> 6.1.1)
 
 DEPENDENCIES:
-  - RSFormView (~> 1.1.0)
+  - RSFormView (~> 2.0.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -13,8 +13,8 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   IQKeyboardManagerSwift: 977affaeb4d6e971975c7790a6850f31d38f1207
-  RSFormView: 8c323dbb785aa636944f41adc8a020e8b97fe3fb
+  RSFormView: 32881de3ef01c62279caad6580595b82de29540b
 
-PODFILE CHECKSUM: 496eca5cbf551c4b8890466f99e851394a997d9e
+PODFILE CHECKSUM: 158b559edf6404f7ff2e69b9f640142762d829e0
 
 COCOAPODS: 1.6.2
